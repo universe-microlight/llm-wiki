@@ -1,0 +1,114 @@
+# Open Knowledge Format (OKF) v0.1 配置
+# 参考: https://github.com/GoogleCloudPlatform/knowledge-catalog
+
+# 知识库元数据
+metadata:
+  name: "LLM Wiki"
+  version: "0.1.0"
+  description: "基于 OKF 规范的 AI 知识库"
+  author: ""
+  license: "Apache-2.0"
+  created: "2024-01-15"
+  updated: "2024-01-15"
+
+# 页面类型定义
+types:
+  concept:
+    description: "概念解释"
+    required_fields: [type, title, description, timestamp]
+    optional_fields: [tags, aliases, related]
+  
+  entity:
+    description: "实体（人物、公司、产品等）"
+    required_fields: [type, title, description, timestamp]
+    optional_fields: [tags, aliases, attributes, related]
+  
+  summary:
+    description: "资料摘要"
+    required_fields: [type, title, resource, timestamp]
+    optional_fields: [tags, key_points, rating]
+  
+  comparison:
+    description: "对比分析"
+    required_fields: [type, title, timestamp]
+    optional_fields: [tags, items, criteria]
+  
+  overview:
+    description: "领域概述"
+    required_fields: [type, title, description, timestamp]
+    optional_fields: [tags, scope, related]
+  
+  index:
+    description: "目录索引"
+    required_fields: [type, title, timestamp]
+    optional_fields: [description]
+  
+  log:
+    description: "变更日志"
+    required_fields: [type, title, timestamp]
+    optional_fields: []
+
+# 命名规范
+naming:
+  # 页面文件名格式
+  page_pattern: "{type}/{slug}.md"
+  
+  # slug 生成规则
+  slug_rules:
+    - lowercase
+    - replace_spaces_with_hyphens
+    - remove_special_chars
+    - max_length: 100
+  
+  # 目录结构
+  directories:
+    concepts: "wiki/concepts/"
+    entities: "wiki/entities/"
+    summaries: "wiki/summaries/"
+    comparisons: "wiki/comparisons/"
+    overviews: "wiki/overviews/"
+
+# 交叉引用规范
+references:
+  # 内部引用格式
+  internal: "[[page-slug]]"
+  
+  # 外部引用格式
+  external: "[显示文本](URL)"
+  
+  # 原始资料引用
+  source: "[[raw/path/to/file]]"
+
+# 质量检查规则
+lint:
+  # 死链检查
+  check_dead_links: true
+  
+  # 孤立页面检查
+  check_orphans: true
+  
+  # 过期信息检查（天数）
+  stale_threshold_days: 180
+  
+  # 最小内容长度（字符）
+  min_content_length: 100
+  
+  # 必需的 frontmatter 字段
+  required_frontmatter:
+    - type
+    - title
+    - timestamp
+
+# 搜索配置
+search:
+  # 搜索索引类型
+  index_type: "hybrid"  # fts, vector, hybrid
+  
+  # 向量嵌入模型
+  embedding_model: "text-embedding-3-small"
+  
+  # 搜索结果数量
+  max_results: 10
+  
+  # 最小相关度分数
+  min_score: 0.5

@@ -1,0 +1,25 @@
+# LLM Wiki 依赖
+
+# 核心依赖
+pyyaml>=6.0
+python-dotenv>=1.0
+requests>=2.31.0
+
+# 文档处理
+pypdf>=3.17.0
+python-docx>=1.1.0
+python-pptx>=0.6.23
+beautifulsoup4>=4.12.0
+markdown>=3.5.0
+
+# 搜索和向量
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# 工具
+rich>=13.0.0
+click>=8.1.0
+tqdm>=4.66.0
+
+# 可选：更好的 PDF OCR
+# mistralai>=1.0.0  # 设置 MISTRAL_API_KEY 环境变量

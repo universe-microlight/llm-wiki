@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.env
+
+# 向量数据库
+chroma/
+*.chroma
+*.db
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# 日志
+*.log
+logs/
+
+# 缓存
+.cache/
+__pycache__/
+
+# 编译的 Python 文件
+*.pyc
+*.pyo
+
+# 分发/打包
+dist/
+build/
+*.egg-info/
+*.egg
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 类型检查
+.mypy_cache/
+.pytype/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# 环境变量（包含敏感信息）
+.env
+.env.local
+.env.*.local
