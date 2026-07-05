@@ -2,9 +2,7 @@
 
 ## 项目定位
 
-这是一个**长期知识工程项目**，目标是通过持续积累和交叉引用，在 10 年时间跨度内构建一个可精确检索的知识体系。
-
-当前焦点领域：**下一代芯片架构**（从散热问题切入，探索原子/粒子层面的计算范式）
+这是一个**长期知识工程项目**，支持多领域并行积累，目标是通过结构化的知识管理，在任意时间跨度内构建可精确检索的知识体系。
 
 ## 核心原则
 
@@ -26,7 +24,7 @@
 ```
 
 - **讨论层**：对话内容不存 wiki，只在讨论结束后提炼关键结论
-- **Wiki 层**：结构化知识页，每页聚焦一个概念/实体/方案
+- **Wiki 层**：结构化知识页，按领域分区存放
 - **Memory 层**：MEMORY.md 只存项目级元信息（进度、决策、方向变化）
 
 ### 2. 分层加载策略
@@ -35,16 +33,30 @@
 
 | 场景 | 加载什么 | 不加载什么 |
 |------|---------|-----------|
-| 全新方向 | roadmap.md + 相关 overview | 具体 concept 页 |
-| 深入已有方向 | 相关 concept 页 + comparison | 其他方向的页 |
-| 对比方案 | comparison 页 + 各方案 concept | overview |
+| 全新领域 | roadmap.md + 该领域 overview | 其他领域 |
+| 深入已有领域 | 相关 concept/solution + comparison | 其他领域 |
+| 跨领域讨论 | 相关领域的交集 + shared/ | 不相关的领域 |
 | 回顾进展 | roadmap.md + log.md 最近几条 | 具体技术细节 |
 
-### 3. 摘要即入口
+### 3. 领域分区
+
+```
+wiki/domains/
+├── _template/          # 新领域模板
+├── chip-architecture/  # 领域A
+├── quant-trading/      # 领域B
+└── <future-domain>/    # 未来新领域
+```
+
+- 每个领域内部结构统一：concepts/ solutions/ comparisons/ entities/ overviews/
+- 讨论时根据话题自动判断领域，只加载该领域页面
+- 跨领域知识放 `shared/`
+
+### 4. 摘要即入口
 
 每个页面的第一段（frontmatter 的 description + 第一个 H2 前的文字）必须是**自包含摘要**（<100字），AI 只读这段就能判断是否需要深入。
 
-### 4. 页面粒度原则
+### 5. 页面粒度原则
 
 - **一个页面 = 一个概念/方案/实体**
 - 如果一个页面超过 2000 字，考虑拆分
@@ -62,12 +74,18 @@ llm-wiki/
 ├── wiki/                   # 结构化知识库
 │   ├── index.md            # 主索引
 │   ├── log.md              # 变更日志
-│   ├── roadmap.md          # 项目路线图
-│   ├── concepts/           # 概念页（一个概念一页）
-│   ├── entities/           # 实体页（公司、团队、产品）
-│   ├── solutions/          # 方案页（技术方案详细描述）
-│   ├── comparisons/        # 对比页（多方案横向对比）
-│   └── overviews/          # 概述页（领域全景）
+│   ├── roadmap.md          # 全局路线图
+│   ├── domains/            # 按领域分区
+│   │   ├── _template/      # 新领域模板
+│   │   └── <domain>/       # 各领域
+│   │       ├── concepts/
+│   │       ├── solutions/
+│   │       ├── comparisons/
+│   │       ├── entities/
+│   │       └── overviews/
+│   └── shared/             # 跨领域共享
+│       ├── concepts/
+│       └── entities/
 ├── schema/                 # 配置
 │   ├── CLAUDE.md           # 本文件
 │   └── okf.yaml
@@ -77,38 +95,40 @@ llm-wiki/
     └── lint.py
 ```
 
-### 新增目录说明
-
-- **solutions/** — 区别于 concepts（纯概念解释），solutions 存放具体的技术方案，包含实验数据、进展状态、可行性评估
-- **roadmap.md** — 项目级路线图，记录阶段目标、里程碑、方向调整决策
-
 ## 页面类型
 
 | 类型 | 存放位置 | 用途 | 典型大小 |
 |------|---------|------|---------|
-| concept | concepts/ | 解释一个概念/原理 | 500-1500字 |
-| entity | entities/ | 公司/团队/产品/人 | 300-800字 |
-| solution | solutions/ | 具体技术方案详情 | 1000-2000字 |
-| comparison | comparisons/ | 多方案横向对比 | 800-1500字 |
-| overview | overviews/ | 领域全景概述 | 1000-2000字 |
-| index | wiki/ 根目录 | 索引/日志/路线图 | 不限 |
+| concept | domains/<d>/concepts/ | 解释一个概念/原理 | 500-1500字 |
+| entity | domains/<d>/entities/ | 公司/团队/产品/人 | 300-800字 |
+| solution | domains/<d>/solutions/ | 具体技术方案详情 | 1000-2000字 |
+| comparison | domains/<d>/comparisons/ | 多方案横向对比 | 800-1500字 |
+| overview | domains/<d>/overviews/ | 领域全景概述 | 1000-2000字 |
+| shared | shared/ | 跨领域通用知识 | 不限 |
 
 ## 工作流程
 
+### 新增领域
+
+1. `cp -r wiki/domains/_template wiki/domains/<领域名>`
+2. 在 `roadmap.md` 添加领域入口
+3. 创建该领域的 overview 入口页
+
 ### 导入新知识
 
-1. 提炼讨论结论（不要照搬对话）
-2. 判断页面类型（concept/solution/comparison/overview）
-3. 检查是否已有相关页面 → 有则更新，无则新建
-4. 建立交叉引用 `[[页面名]]`
-5. 更新 index.md 和 log.md
+1. 判断话题属于哪个领域
+2. 提炼讨论结论（不要照搬对话）
+3. 判断页面类型（concept/solution/comparison/overview）
+4. 检查是否已有相关页面 → 有则更新，无则新建
+5. 建立交叉引用 `[[页面名]]`
+6. 更新 index.md 和 log.md
 
 ### 查询知识
 
-1. 先读 roadmap.md 了解当前阶段
-2. 用 tags 和 description 快速定位相关页面
-3. 只深入读取直接相关的页面
-4. 用 comparison 页面做方案对比
+1. 先读 roadmap.md 确认当前阶段
+2. 根据话题定位领域
+3. 用 tags 和 description 快速过滤
+4. 只深入读取直接相关的页面
 
 ## 写作规范
 
@@ -137,6 +157,7 @@ updated: 2026-07-05                   # 最后更新日期
 ### 交叉引用
 
 - 内部引用：`[[页面名]]` 或 `[[页面名|显示文本]]`
+- 跨领域引用：`[[domains/other-domain/concepts/xxx]]`
 - 同一讨论中产生的多个页面，必须互相引用
 - 新页面必须引用已有的相关页面
 

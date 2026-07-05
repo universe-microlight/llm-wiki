@@ -1,46 +1,42 @@
 ---
 type: log
 title: 变更日志
-timestamp: 2026-07-05T21:30:00+08:00
+timestamp: 2026-07-05T21:49:00+08:00
 ---
 
 # 📝 变更日志
 
 ---
 
-## 2026-07-05
+## 2026-07-05 (v2) — 架构升级
 
-### 知识库初始化
+### 变更
 
-**背景**：从华为韬定律论文讨论切入，系统梳理了芯片散热问题的所有已知方案。
+- 引入 `domains/` 分区机制，支持多领域并行
+- 已有芯片知识迁移到 `domains/chip-architecture/`
+- 新增 `domains/_template/` — 新领域一键复制模板
+- 新增 `shared/` — 跨领域共享知识（通用概念/实体）
+- 旧目录（concepts/ solutions/ comparisons/ entities/ overviews/）已清除
+
+### 设计决策
+
+- 公开库 = 通用模板 + 示例，任何人可从零搭建
+- 私有库 = 个人知识，git submodule 引用公开库
+
+---
+
+## 2026-07-05 (v1) — 初始化
 
 ### 新增
 
-**概述页**
-- [thermal-problem-landscape] — 芯片散热问题全景（入口页）
-
-**方案页**
-- [reversible-computing] — 可逆计算：兰道尔极限、绝热逻辑、能量回收、实验进展
-- [single-atom-transistor] — 单原子晶体管：磷原子量子点、实验进展
-- [atomic-computing-paradigms] — 原子/粒子层面替代范式：分子电子学、自旋电子学、轨道电子学、拓扑电子学、自旋冰、DNA计算
-
-**对比页**
-- [thermal-solutions-matrix] — 全景对比矩阵（散热方案 vs 产热控制，8个维度）
-
-**实体页**
-- [huawei-tao-law] — 华为韬定律：LogicFolding、AI三件套、散热问题
+**芯片架构领域 (domains/chip-architecture/)**
+- [overviews/thermal-problem-landscape] — 芯片散热问题全景
+- [solutions/reversible-computing] — 可逆计算
+- [solutions/single-atom-transistor] — 单原子晶体管
+- [solutions/atomic-computing-paradigms] — 原子/粒子层面替代范式
+- [comparisons/thermal-solutions-matrix] — 方案全景对比矩阵
+- [entities/huawei-tao-law] — 华为韬定律
 
 **元页面**
-- [roadmap] — 10年项目路线图（4个阶段）
-- [index.md] — 主索引（重写）
-
-### 配置
-
-- [schema/CLAUDE.md] — 重写AI行为规范：加入项目定位、token节省策略、分层加载、知识三角架构
-
-### 来源
-
-- 华为韬定律论文更新版讨论（2026-07-05 20:06）
-- 芯片散热原子/粒子层面方案讨论（2026-07-05 20:19）
-- 可逆计算深度讨论（2026-07-05 20:32）
-- 原子结构替代晶体管讨论（2026-07-05 20:45）
+- [roadmap.md] — 项目路线图
+- [schema/CLAUDE.md] — AI 行为规范

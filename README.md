@@ -1,143 +1,107 @@
-# 🧠 LLM Wiki — AI 知识库
+# LLM Wiki — AI 知识库系统
 
-基于 [Karpathy 的 LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) 概念和 Google [OKF (Open Knowledge Format)](https://cloud.google.com/blog/products/data-analytics/introducing-the-open-knowledge-format) 规范构建的个人 AI 知识库系统。
+基于 [Karpathy LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) 概念和 Google [OKF 规范](https://cloud.google.com/blog/products/data-analytics/introducing-the-open-knowledge-format) 构建的**长期知识工程系统**。
 
 ## ✨ 特性
 
-- 📄 **Markdown + YAML** — 纯文本，Git 友好，任何编辑器都能用
-- 🤖 **AI 自动维护** — 导入资料后 AI 自动整理、交叉引用、发现矛盾
-- 🔍 **语义搜索** — 基于向量嵌入的智能搜索
-- 📊 **知识图谱** — 可视化概念和实体之间的关系
-- 🔗 **OKF 兼容** — 符合 Google Open Knowledge Format v0.1 规范
-- 💻 **跨平台** — 任何电脑 clone 下来就能用
+- 📂 **领域分区** — 多领域并行，互不干扰
+- 🤖 **AI 自动维护** — 对话即入库，自动结构化
+- 🔍 **精确加载** — 分层加载策略，不浪费 token
+- 📊 **知识三角** — 讨论 → Wiki → Memory 三层架构
+- 💻 **零依赖** — 纯 Markdown + Git，任何设备都能用
 
-## 🏗️ 三层架构
+## 🚀 5 分钟从零搭建
+
+### 1. 克隆本仓库（作为模板）
+
+```bash
+# 方式一：Fork GitHub 上的仓库
+# 方式二：直接克隆
+git clone https://github.com/universe-microlight/llm-wiki.git my-knowledge-base
+cd my-knowledge-base
+```
+
+### 2. 创建你的第一个领域
+
+```bash
+# 复制模板
+cp -r wiki/domains/_template wiki/domains/my-first-domain
+
+# 开始写知识
+echo "你的第一个知识页" > wiki/domains/my-first-domain/concepts/my-concept.md
+```
+
+### 3. 告诉 AI 你的知识库
+
+把 `schema/CLAUDE.md` 的内容作为系统提示词的一部分告诉你的 AI（Claude / ChatGPT / 任意 LLM），它就能自动维护你的知识库。
+
+### 4. 持续积累
+
+```bash
+# 每次讨论后
+git add -A && git commit -m "新增: xxx" && git push
+```
+
+## 📂 目录结构
 
 ```
 llm-wiki/
-├── raw/              # 📁 原始资料（不可变）
-│   ├── papers/       #   论文
-│   ├── articles/     #   文章
-│   └── notes/        #   笔记
-├── wiki/             # 📚 AI 维护的知识库
-│   ├── index.md      #   目录索引
-│   ├── log.md        #   变更日志
-│   ├── concepts/     #   概念页面
-│   ├── entities/     #   实体页面
-│   └── summaries/    #   摘要页面
-├── schema/           # ⚙️ 配置规则
-│   ├── CLAUDE.md     #   AI 行为规范
-│   └── okf.yaml      #   OKF 元数据
-└── scripts/          # 🔧 工具脚本
-    ├── ingest.py     #   导入脚本
-    ├── search.py     #   搜索脚本
-    └── lint.py       #   健康检查
+├── wiki/
+│   ├── index.md              # 主索引
+│   ├── log.md                # 变更日志
+│   ├── roadmap.md            # 全局路线图
+│   ├── domains/              # 🔑 核心：按领域分区
+│   │   ├── _template/        # 新领域模板（复制即用）
+│   │   └── chip-architecture/# 示例领域：芯片架构
+│   │       ├── concepts/     #   概念页
+│   │       ├── solutions/    #   方案页
+│   │       ├── comparisons/  #   对比页
+│   │       ├── entities/     #   实体页
+│   │       └── overviews/    #   概述页
+│   └── shared/               # 跨领域共享知识
+│       ├── concepts/
+│       └── entities/
+├── schema/
+│   ├── CLAUDE.md             # AI 行为规范（关键！）
+│   └── okf.yaml              # OKF 元数据
+├── scripts/
+│   ├── ingest.py             # 资料导入
+│   ├── search.py             # 搜索
+│   └── lint.py               # 健康检查
+└── raw/                      # 原始资料（不可变）
 ```
 
-## 🚀 快速开始
+## 🧠 核心设计：如何省 Token
 
-### 1. 克隆项目
+长期知识库最大的敌人是**上下文膨胀**。本系统的设计目标：讨论时只加载相关页面，不全量读取。
 
-```bash
-git clone https://github.com/你的用户名/llm-wiki.git
-cd llm-wiki
+### 知识三角
+
+```
+讨论中产生 ──提炼──→ Wiki（结构化）──精华──→ Memory（永久索引）
+  (临时)              (按领域分区)            (项目级元信息)
 ```
 
-### 2. 安装依赖
+### 分层加载
 
-```bash
-pip install -r requirements.txt
-```
+| 场景 | 加载什么 | 不加载什么 |
+|------|---------|-----------|
+| 全新方向 | roadmap + 相关 overview | 具体 concept |
+| 深入已有方向 | 相关 concept + comparison | 其他领域 |
+| 对比方案 | comparison + 各方案 concept | overview |
 
-### 3. 配置 API Key
+### 页面粒度
 
-```bash
-cp .env.example .env
-# 编辑 .env，填入你的 API Key
-```
-
-### 4. 导入资料
-
-```bash
-# 导入单个文件
-python scripts/ingest.py raw/papers/transformer.pdf
-
-# 导入整个目录
-python scripts/ingest.py raw/articles/
-
-# 从 URL 导入
-python scripts/ingest.py --url https://example.com/article
-```
-
-### 5. 搜索知识
-
-```bash
-python scripts/search.py "什么是 Transformer 的注意力机制？"
-```
-
-### 6. 健康检查
-
-```bash
-python scripts/lint.py
-```
-
-## 📋 OKF 规范
-
-本项目遵循 [Google Open Knowledge Format v0.1](https://github.com/GoogleCloudPlatform/knowledge-catalog) 规范：
-
-### Wiki 页面格式
-
-```markdown
----
-type: concept
-title: 注意力机制
-description: Transformer 架构中的核心组件
-tags: [transformer, attention, deep-learning]
-timestamp: 2024-01-15T10:30:00Z
----
-
-# 注意力机制
-
-## 概述
-注意力机制是 Transformer 架构的核心组件...
-
-## 关联
-- [[transformer-architecture]]
-- [[self-attention]]
-- [[multi-head-attention]]
-
-## 来源
-- [原始论文](../raw/papers/attention-is-all-you-need.pdf)
-```
-
-### 支持的页面类型
-
-| 类型 | 说明 |
-|------|------|
-| `concept` | 概念解释 |
-| `entity` | 实体（人物、公司、产品等） |
-| `summary` | 资料摘要 |
-| `comparison` | 对比分析 |
-| `overview` | 领域概述 |
-| `index` | 目录索引 |
-| `log` | 变更日志 |
-
-## 🤖 AI 集成
-
-### Claude / ChatGPT / 任意 LLM
-
-将 `schema/CLAUDE.md` 作为系统提示词的一部分，AI 就能理解并维护你的 wiki。
-
-### OpenClaw 集成
-
-本项目可直接作为 OpenClaw 的 workspace 使用，AI agent 会自动维护知识库。
+- 一概念一页，超 2000 字就拆分
+- 每页第一段 <100 字自包含摘要
+- 用 `tags` 快速过滤
 
 ## 📖 使用场景
 
-- 📚 **学术研究** — 整理论文、追踪研究前沿
-- 💼 **项目管理** — 积累项目知识、避免重复踩坑
-- 📝 **个人学习** — 构建个人知识体系
-- 🏢 **团队协作** — 共享团队知识库
+- 🔬 **长期研究项目** — 10年跨度的知识积累
+- 📚 **学术研究** — 论文追踪、概念整理
+- 💼 **技术选型** — 方案对比、决策记录
+- 📝 **个人学习** — 构建知识体系
 
 ## 📄 License
 
@@ -147,4 +111,3 @@ Apache 2.0
 
 - [Andrej Karpathy](https://twitter.com/karpathy) — LLM Wiki 概念
 - [Google Cloud](https://cloud.google.com/) — OKF 规范
-- [llmwiki.app](https://llmwiki.app) — 参考实现

@@ -1,49 +1,48 @@
 ---
 type: index
 title: 知识库索引
-description: LLM Wiki 主索引 — 下一代芯片架构研究知识库
-timestamp: 2026-07-05T21:30:00+08:00
+description: LLM Wiki 主索引 — 支持多领域的长期知识工程系统
+timestamp: 2026-07-05T21:49:00+08:00
 ---
 
-# 📚 知识库索引
+# 📚 LLM Wiki 知识库
 
-## 🎯 当前焦点：下一代芯片架构
+## 🎯 项目路线图
 
-从芯片散热问题切入，探索超越传统CMOS的计算范式。
-
-→ [[roadmap|项目路线图]] | [[thermal-solutions-matrix|方案全景对比]]
+→ [[roadmap|全局路线图（各领域入口）]]
 
 ---
 
-## 📊 概述 (Overviews)
+## 📂 领域目录
 
-- [[thermal-problem-landscape]] — 芯片散热问题全景（入口页）
+### 🔧 芯片架构 (chip-architecture)
 
-## 🔧 技术方案 (Solutions)
+从散热问题切入，探索超越传统CMOS的计算范式。
 
-- [[reversible-computing]] — 可逆计算：从信息论根源消除产热 ⭐
-- [[single-atom-transistor]] — 单原子晶体管：单电子开关
-- [[atomic-computing-paradigms]] — 原子/粒子层面替代范式（分子/自旋/轨道/拓扑/DNA）
+- [[domains/chip-architecture/overviews/thermal-problem-landscape|散热问题全景（入口）]]
+- [[domains/chip-architecture/comparisons/thermal-solutions-matrix|方案全景对比]]
 
-## 📈 对比分析 (Comparisons)
+### ➕ 新领域
 
-- [[thermal-solutions-matrix]] — 芯片产热控制方案全景对比矩阵
+复制模板即可创建新领域：
 
-## 🏢 实体 (Entities)
+```bash
+cp -r wiki/domains/_template wiki/domains/your-domain
+```
 
-- [[huawei-tao-law]] — 华为韬定律（3D堆叠与散热问题）
+详见 [[domains/_template/README|领域模板说明]]
 
-## 📝 元页面
+---
 
-- [[roadmap]] — 项目路线图与阶段规划
-- [log.md](log.md) — 变更日志
+## 🌐 跨领域共享
+
+- `shared/concepts/` — 通用概念（数学、物理基础等）
+- `shared/entities/` — 跨领域实体（如某公司同时涉及芯片和AI）
 
 ---
 
 ## 📊 统计
 
-- **概述页**: 1
-- **方案页**: 3
-- **对比页**: 1
-- **实体页**: 1
+- **领域数**: 1 (chip-architecture)
+- **知识页**: 6
 - **最后更新**: 2026-07-05
