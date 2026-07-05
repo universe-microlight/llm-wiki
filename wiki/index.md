@@ -1,77 +1,49 @@
 ---
 type: index
 title: 知识库索引
-description: LLM Wiki 主索引
-timestamp: 2024-01-15T00:00:00Z
+description: LLM Wiki 主索引 — 下一代芯片架构研究知识库
+timestamp: 2026-07-05T21:30:00+08:00
 ---
 
 # 📚 知识库索引
 
-欢迎来到你的个人 AI 知识库！
+## 🎯 当前焦点：下一代芯片架构
 
-## 📖 概述
+从芯片散热问题切入，探索超越传统CMOS的计算范式。
 
-本知识库由 AI 自动维护，基于 [Karpathy 的 LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) 概念和 Google [OKF 规范](https://cloud.google.com/blog/products/data-analytics/introducing-the-open-knowledge-format) 构建。
+→ [[roadmap|项目路线图]] | [[thermal-solutions-matrix|方案全景对比]]
 
-## 🗂️ 分类
+---
 
-### 概念 (Concepts)
-理解关键概念和原理。
+## 📊 概述 (Overviews)
 
-> 还没有概念页面。导入资料后 AI 会自动创建。
+- [[thermal-problem-landscape]] — 芯片散热问题全景（入口页）
 
-### 实体 (Entities)
-了解重要的人物、公司、产品。
+## 🔧 技术方案 (Solutions)
 
-> 还没有实体页面。导入资料后 AI 会自动创建。
+- [[reversible-computing]] — 可逆计算：从信息论根源消除产热 ⭐
+- [[single-atom-transistor]] — 单原子晶体管：单电子开关
+- [[atomic-computing-paradigms]] — 原子/粒子层面替代范式（分子/自旋/轨道/拓扑/DNA）
 
-### 摘要 (Summaries)
-资料的精华总结。
+## 📈 对比分析 (Comparisons)
 
-> 还没有摘要页面。导入资料后 AI 会自动创建。
+- [[thermal-solutions-matrix]] — 芯片产热控制方案全景对比矩阵
 
-## 📥 如何使用
+## 🏢 实体 (Entities)
 
-### 1. 导入资料
+- [[huawei-tao-law]] — 华为韬定律（3D堆叠与散热问题）
 
-将文件放入 `raw/` 目录：
+## 📝 元页面
 
-```bash
-# 复制文件
-cp ~/Documents/paper.pdf raw/papers/
-cp ~/Notes/article.md raw/articles/
+- [[roadmap]] — 项目路线图与阶段规划
+- [log.md](log.md) — 变更日志
 
-# 或使用脚本
-python scripts/ingest.py raw/papers/new-paper.pdf
-```
-
-### 2. 让 AI 整理
-
-告诉 AI（Claude、ChatGPT 等）：
-
-> 请阅读 schema/CLAUDE.md，然后处理 raw/ 中的新资料，更新 wiki。
-
-### 3. 搜索知识
-
-```bash
-python scripts/search.py "你的问题"
-```
-
-### 4. 健康检查
-
-```bash
-python scripts/lint.py
-```
+---
 
 ## 📊 统计
 
-- **概念页面**: 0
-- **实体页面**: 0
-- **摘要页面**: 0
-- **最后更新**: 2024-01-15
-
-## 🔗 相关资源
-
-- [Karpathy 的 LLM Wiki Gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
-- [Google OKF 规范](https://github.com/GoogleCloudPlatform/knowledge-catalog)
-- [LLM Wiki 参考实现](https://llmwiki.app)
+- **概述页**: 1
+- **方案页**: 3
+- **对比页**: 1
+- **实体页**: 1
+- **最后更新**: 2026-07-05

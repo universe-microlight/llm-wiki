@@ -1,195 +1,148 @@
-# LLM Wiki Schema
+# LLM Wiki Schema — AI 行为规范
 
-你是一个专业的知识库维护者。你的任务是帮助用户构建和维护一个结构化的知识库。
+## 项目定位
+
+这是一个**长期知识工程项目**，目标是通过持续积累和交叉引用，在 10 年时间跨度内构建一个可精确检索的知识体系。
+
+当前焦点领域：**下一代芯片架构**（从散热问题切入，探索原子/粒子层面的计算范式）
 
 ## 核心原则
 
-1. **准确性优先** — 信息必须准确，有疑问时标注 `[待验证]`
-2. **交叉引用** — 使用 `[[页面名]]` 格式建立知识关联
-3. **来源追溯** — 每条信息都要注明来源
-4. **中立客观** — 保持中立，呈现多方观点
-5. **持续更新** — 新信息要整合到现有知识体系中
+1. **准确性优先** — 有疑问标注 `[待验证]`
+2. **交叉引用** — 用 `[[页面名]]` 建立知识关联
+3. **来源追溯** — 每条信息注明来源
+4. **中立客观** — 呈现多方观点
+5. **持续更新** — 新信息整合到现有体系
 
-## 知识库结构
+## ⚡ Token 节省策略（核心）
 
-### 目录说明
+长期项目最大的敌人是上下文膨胀。必须严格遵守：
 
-- `raw/` — 原始资料，不可修改
-- `wiki/` — AI 维护的知识页面
-- `schema/` — 配置和规则
+### 1. 知识三角：Discussion → Wiki → Memory
 
-### 页面类型
-
-#### concept（概念）
-解释某个概念、原理、方法论。
-
-```yaml
----
-type: concept
-title: 注意力机制
-description: Transformer 的核心组件
-tags: [transformer, attention]
-timestamp: 2024-01-15T10:30:00Z
----
+```
+讨论中产生 → 提炼存入 wiki → 精华写入 memory
+  (临时)        (结构化)         (永久索引)
 ```
 
-#### entity（实体）
-描述人物、公司、产品、项目等。
+- **讨论层**：对话内容不存 wiki，只在讨论结束后提炼关键结论
+- **Wiki 层**：结构化知识页，每页聚焦一个概念/实体/方案
+- **Memory 层**：MEMORY.md 只存项目级元信息（进度、决策、方向变化）
 
-```yaml
----
-type: entity
-title: OpenAI
-description: 人工智能研究公司
-tags: [ai-company, gpt]
-timestamp: 2024-01-15T10:30:00Z
----
+### 2. 分层加载策略
+
+讨论新话题时，按需加载，不要全量读取：
+
+| 场景 | 加载什么 | 不加载什么 |
+|------|---------|-----------|
+| 全新方向 | roadmap.md + 相关 overview | 具体 concept 页 |
+| 深入已有方向 | 相关 concept 页 + comparison | 其他方向的页 |
+| 对比方案 | comparison 页 + 各方案 concept | overview |
+| 回顾进展 | roadmap.md + log.md 最近几条 | 具体技术细节 |
+
+### 3. 摘要即入口
+
+每个页面的第一段（frontmatter 的 description + 第一个 H2 前的文字）必须是**自包含摘要**（<100字），AI 只读这段就能判断是否需要深入。
+
+### 4. 页面粒度原则
+
+- **一个页面 = 一个概念/方案/实体**
+- 如果一个页面超过 2000 字，考虑拆分
+- 对比类内容用 comparison 页面，不要塞进概念页
+- 每个页面必须有 `tags`，tags 是快速过滤的关键
+
+## 目录结构
+
+```
+llm-wiki/
+├── raw/                    # 原始资料（不可变）
+│   ├── papers/
+│   ├── articles/
+│   └── notes/
+├── wiki/                   # 结构化知识库
+│   ├── index.md            # 主索引
+│   ├── log.md              # 变更日志
+│   ├── roadmap.md          # 项目路线图
+│   ├── concepts/           # 概念页（一个概念一页）
+│   ├── entities/           # 实体页（公司、团队、产品）
+│   ├── solutions/          # 方案页（技术方案详细描述）
+│   ├── comparisons/        # 对比页（多方案横向对比）
+│   └── overviews/          # 概述页（领域全景）
+├── schema/                 # 配置
+│   ├── CLAUDE.md           # 本文件
+│   └── okf.yaml
+└── scripts/                # 工具
+    ├── ingest.py
+    ├── search.py
+    └── lint.py
 ```
 
-#### summary（摘要）
-对某篇资料的总结。
+### 新增目录说明
 
-```yaml
----
-type: summary
-title: "Attention Is All You Need 论文摘要"
-resource: raw/papers/attention-is-all-you-need.pdf
-tags: [paper-summary, transformer]
-timestamp: 2024-01-15T10:30:00Z
----
-```
+- **solutions/** — 区别于 concepts（纯概念解释），solutions 存放具体的技术方案，包含实验数据、进展状态、可行性评估
+- **roadmap.md** — 项目级路线图，记录阶段目标、里程碑、方向调整决策
 
-#### comparison（对比）
-对比多个概念、方案、产品等。
+## 页面类型
 
-```yaml
----
-type: comparison
-title: "Transformer vs RNN"
-tags: [comparison, architecture]
-timestamp: 2024-01-15T10:30:00Z
----
-```
-
-#### overview（概述）
-某个领域的综合概述。
-
-```yaml
----
-type: overview
-title: 深度学习架构演进
-description: 从 MLP 到 Transformer 的发展历程
-tags: [deep-learning, history]
-timestamp: 2024-01-15T10:30:00Z
----
-```
+| 类型 | 存放位置 | 用途 | 典型大小 |
+|------|---------|------|---------|
+| concept | concepts/ | 解释一个概念/原理 | 500-1500字 |
+| entity | entities/ | 公司/团队/产品/人 | 300-800字 |
+| solution | solutions/ | 具体技术方案详情 | 1000-2000字 |
+| comparison | comparisons/ | 多方案横向对比 | 800-1500字 |
+| overview | overviews/ | 领域全景概述 | 1000-2000字 |
+| index | wiki/ 根目录 | 索引/日志/路线图 | 不限 |
 
 ## 工作流程
 
-### 1. 导入新资料（Ingest）
+### 导入新知识
 
-当用户导入新资料时：
+1. 提炼讨论结论（不要照搬对话）
+2. 判断页面类型（concept/solution/comparison/overview）
+3. 检查是否已有相关页面 → 有则更新，无则新建
+4. 建立交叉引用 `[[页面名]]`
+5. 更新 index.md 和 log.md
 
-1. 阅读原始资料
-2. 创建摘要页面（`wiki/summaries/`）
-3. 提取关键概念，创建或更新概念页面（`wiki/concepts/`）
-4. 提取关键实体，创建或更新实体页面（`wiki/entities/`）
-5. 建立交叉引用（`[[页面名]]`）
-6. 发现矛盾时标注 `[矛盾: ...]`
-7. 更新 `wiki/index.md` 索引
-8. 在 `wiki/log.md` 记录变更
+### 查询知识
 
-### 2. 查询知识（Query）
-
-当用户提问时：
-
-1. 在 wiki 中搜索相关页面
-2. 综合多个页面的信息
-3. 提供准确答案并注明来源
-4. 如果答案有价值，可以创建新页面
-
-### 3. 健康检查（Lint）
-
-定期运行健康检查：
-
-- 检查死链（`[[页面名]]` 指向不存在的页面）
-- 发现孤立页面（没有被任何页面引用）
-- 标记过期信息（超过 6 个月未更新）
-- 检查缺失的交叉引用
-- 验证 frontmatter 格式
+1. 先读 roadmap.md 了解当前阶段
+2. 用 tags 和 description 快速定位相关页面
+3. 只深入读取直接相关的页面
+4. 用 comparison 页面做方案对比
 
 ## 写作规范
 
-### 标题层级
+### Frontmatter 必填字段
 
-```markdown
-# 页面标题（H1，只有一个）
-## 主要章节（H2）
-### 子章节（H3）
-#### 细节（H4，尽量少用）
+```yaml
+---
+type: concept|entity|solution|comparison|overview
+title: 页面标题
+description: 一句话摘要（<100字，自包含）
+tags: [tag1, tag2, tag3]
+timestamp: 2026-07-05T20:00:00+08:00
+status: active|draft|archived
+---
+```
+
+### 可选字段
+
+```yaml
+related: [page-slug-1, page-slug-2]  # 关联页面
+source: "来源描述"                     # 信息来源
+maturity: concept|lab|prototype|production  # 技术成熟度
+updated: 2026-07-05                   # 最后更新日期
 ```
 
 ### 交叉引用
 
-```markdown
-详见 [[transformer-architecture]] 的介绍。
-对比 [[self-attention]] 和 [[cross-attention]] 的区别。
-```
+- 内部引用：`[[页面名]]` 或 `[[页面名|显示文本]]`
+- 同一讨论中产生的多个页面，必须互相引用
+- 新页面必须引用已有的相关页面
 
-### 来源引用
+## 质量检查
 
-```markdown
-根据 [[raw/papers/attention-is-all-you-need.pdf]] 的描述...
-> "Attention is all you need." — Vaswani et al., 2017
-```
-
-### 列表和表格
-
-```markdown
-- 要点一
-- 要点二
-  - 子要点
-
-| 特性 | Transformer | RNN |
-|------|-------------|-----|
-| 并行化 | ✅ 支持 | ❌ 不支持 |
-| 长距离依赖 | ✅ 好 | ❌ 差 |
-```
-
-## 质量标准
-
-### 好的页面
-
-- 标题清晰明确
-- 有简洁的概述
-- 包含具体例子
-- 有交叉引用
-- 标注了来源
-- 更新及时
-
-### 需要改进的页面
-
-- 内容过于简略
-- 缺少来源
-- 没有交叉引用
-- 信息过时
-- 格式不规范
-
-## 变更记录
-
-每次更新 wiki 时，在 `wiki/log.md` 中记录：
-
-```markdown
-## 2024-01-15
-
-### 新增
-- [attention-mechanism] — 注意力机制概念页面
-- [transformer-paper-summary] — Transformer 论文摘要
-
-### 更新
-- [deep-learning-overview] — 补充了 Transformer 部分
-- [neural-networks] — 修正了反向传播的描述
-
-### 来源
-- raw/papers/attention-is-all-you-need.pdf
-```
+- 死链检查：`[[页面名]]` 必须指向存在的文件
+- 孤立检查：每个页面至少被一个其他页面引用
+- 过期标记：超过 6 个月未更新的页面标 `[过期]`
+- 粒度检查：单页超 2000 字时建议拆分
