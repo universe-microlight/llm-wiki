@@ -21,6 +21,8 @@ timestamp: 2026-07-05T21:49:00+08:00
 
 - [[domains/chip-architecture/overviews/thermal-problem-landscape|散热问题全景（入口）]]
 - [[domains/chip-architecture/comparisons/thermal-solutions-matrix|方案全景对比]]
+- [[domains/chip-architecture/solutions/spintronics|自旋电子学（5nm可行性）]]
+- [[domains/chip-architecture/solutions/orbital-and-spin-ice|轨道电子学与自旋冰评估]]
 
 ### ➕ 新领域
 
@@ -44,5 +46,5 @@ cp -r wiki/domains/_template wiki/domains/your-domain
 ## 📊 统计
 
 - **领域数**: 1 (chip-architecture)
-- **知识页**: 6
+- **知识页**: 8
 - **最后更新**: 2026-07-05
